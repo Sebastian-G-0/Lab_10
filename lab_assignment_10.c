@@ -2,10 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Trie node structure
+
 struct TrieNode {
-    struct TrieNode *children[26]; // Assuming English alphabet
-    int isEndOfWord; // Flag to mark end of word
+    struct TrieNode *children[26]; 
+    int isEndOfWord; 
 };
 
 // Creates a new Trie node
@@ -28,18 +28,18 @@ void insert(struct TrieNode *root, char *word) {
     
     for (i = 0; i < strlen(word); i++) {
         if (word[i] < 'a' || word[i] > 'z') {
-            return; // Invalid character
+            return; 
         }
-        int index = word[i] - 'a'; // Convert character to index
+        int index = word[i] - 'a'; 
         if (!current->children[index]) {
             current->children[index] = createTrieNode();
             if (current->children[index] == NULL) {
-                return; // Memory allocation failed
+                return; 
             }
         }
         current = current->children[index];
     }
-    current->isEndOfWord++; // Increment counter
+    current->isEndOfWord++; 
 }
 
 int numberOfOccurrences(struct TrieNode *root, char *word) {
@@ -49,11 +49,11 @@ int numberOfOccurrences(struct TrieNode *root, char *word) {
     for (i = 0; i < strlen(word); i++) {
         int index = word[i] - 'a';
         if (!current->children[index]) {
-            return 0; // Word not found
+            return 0; 
         }
         current = current->children[index];
     }
-    return current->isEndOfWord; // Return counter
+    return current->isEndOfWord; 
 }
 
 
@@ -66,7 +66,7 @@ void deallocateTrie(struct TrieNode *root) {
     for (i = 0; i < 26; i++) {
         if (root->children[i]) {
             deallocateTrie(root->children[i]);
-            root->children[i] = NULL; // Set children to NULL after deallocation
+            root->children[i] = NULL; 
         }
     }
     free(root);
@@ -99,7 +99,6 @@ int main(void) {
     char *inWords[256];
     int i;
     
-    // Read the number of words in the dictionary
     int numWords = readDictionary("dictionary-1.txt", inWords);
     for (i = 0; i < numWords; ++i) {
         printf("%s\n", inWords[i]);
@@ -110,13 +109,11 @@ int main(void) {
         insert(root, inWords[i]);
     }
     
-    // Words to search for
     char *pWords[] = {"notaword", "ucf", "no", "note", "corg"};
     for (i = 0; i < 5; i++) {
         printf("%s %d\n", pWords[i], numberOfOccurrences(root, pWords[i]));
     }
     
-    // Deallocate memory for Trie
     deallocateTrie(root);
     root = NULL;
     if (root != NULL) {
